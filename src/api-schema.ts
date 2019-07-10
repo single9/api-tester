@@ -44,7 +44,7 @@ export interface IActionParams {
   body?: {
     [key: string]: any
   }
-  upload?: ICApiUploadFile[];
+  uploads?: ICApiUploadFile[];
   tester?: IActionTesterFunction;
 }
 
@@ -75,7 +75,8 @@ export class ApiSchema {
 
   private genApiFunction(schemas: ICApiSchema[]) {
     schemas.forEach(schema => {
-      if (schema.name.search(/\W+/) >= 0) throw new Error(`schema name only allow words`);
+      if (schema.name.search(/\W+/) >= 0)
+        throw new Error('name only allow certain words and digits');
       this.apis[schema.name] = this.actions(schema);
     });
   }
@@ -108,8 +109,12 @@ export class ApiSchema {
           });
         }
 
-        if (_data.body && params.body) {
-          _data.body = params.body
+        if (params.body) {
+          _data.body = params.body;
+        }
+
+        if (params.uploads) {
+          _data.uploads = params.uploads;
         }
       }
 
@@ -130,15 +135,15 @@ export class ApiSchema {
       });
 
       return action;
-    }
+    };
   }
 
-  private get(data: ICApiSchema, params?: IActionParams) {
+  private get(data: ICApiSchema) {
     return new Promise((resolve, reject) => {
       request.get(data.path, {
         time: true,
         json: true,
-      }, (err, resp, body) => {
+      }, (err, resp) => {
         if (err) {
           reject(err);
         } else {
@@ -146,27 +151,27 @@ export class ApiSchema {
           resolve(resp);
         }
       });
-    })
+    });
   }
 
-  private delete(data: ICApiSchema, params?: IActionParams) {
+  private delete(data: ICApiSchema) {
     return new Promise((resolve, reject) => {
       request.delete(data.path, {
         time: true,
         json: true,
         body: data.body,
-      }, (err, resp, body) => {
+      }, (err, resp) => {
         if (err) {
           reject(err);
         } else {
           this.showResult(resp);
-          resolve(resp)
+          resolve(resp);
         }
       });
-    })
+    });
   }
 
-  private post(data: ICApiSchema, params?: IActionParams) {
+  private post(data: ICApiSchema) {
     return new Promise((resolve, reject) => {
       let req = request.post(data.path, {
         time: true,
@@ -177,7 +182,7 @@ export class ApiSchema {
           reject(err);
         } else {
           this.showResult(resp);
-          resolve(resp)
+          resolve(resp);
         }
       });
 
@@ -195,7 +200,7 @@ export class ApiSchema {
     });
   }
   
-  private put(data: ICApiSchema, params?: IActionParams) {
+  private put(data: ICApiSchema) {
     return new Promise((resolve, reject) => {
       request.put(data.path, {
         time: true,
@@ -206,13 +211,13 @@ export class ApiSchema {
           reject(err);
         } else {
           this.showResult(resp);
-          resolve(resp)
+          resolve(resp);
         }
       });
     });
   }
 
-  private patch(data: ICApiSchema, params?: IActionParams) {
+  private patch(data: ICApiSchema) {
     return new Promise((resolve, reject) => {
       request.patch(data.path, {
         time: true,
@@ -223,7 +228,7 @@ export class ApiSchema {
           reject(err);
         } else {
           this.showResult(resp);
-          resolve(resp)
+          resolve(resp);
         }
       });
     });
