@@ -11,6 +11,94 @@ Installation
 Usage
 ============
 
+```js
+const { ApiTester } = require('@single9/api-tester');
+```
+
+Create APIs
+------------
+```js
+const api = new ApiTester([
+  {
+    name: 'ApiName',          // only allow certain words and digits
+    path: '/Data',            // e.g. /api/posts
+    method: '<HTTP Method>',  // e.g. post
+  },
+], {
+  rootUrl: '<API root URL>'   // e.g. https://jsonplaceholder.typicode.com
+                              // Default: http://localhost:3000
+  showResult: true            // set false to disable results console log
+}).Apis;  // Don't for got this
+```
+
+Use Your Api
+------------
+
+### Usage
+
+    ApiTester.Apis.<ApiName>(params)
+
+- **params**
+  - queryString
+  - pathParams
+  - body
+  - uploads
+  - tester
+
+### Example
+
+```js
+const api = new ApiTester([
+  {
+    name: 'getPosts',
+    path: '/api/posts',
+    method: 'get',
+  },
+], {
+  showResult: true            // set false to disable results console log
+}).Apis;
+
+api.getPosts()
+  .then(result => console.log(result))
+  .catch(err => console.error(err))
+```
+
+Upload File
+-----------
+
+    ApiTester.Apis.<ApiName>({
+      uploads: [
+        fieldName: <Form Field Name>,
+        path: <File Path>,
+        filename: <File Name>,
+      ]
+    })
+
+```js
+const path = require('path');
+const api = new ApiTester([
+  {
+    name: 'uploadFile',
+    path: '/api/upload',
+    method: 'post',
+  },
+], {
+  showResult: true            // set false to disable results console log
+}).Apis;
+
+const filePath = path.join(__dirname, 'image.jpg'),
+
+api.uploadFile({
+    uploads: [
+      fieldName: 'file',
+      path: filePath,
+      filename: path.basename(filePath),
+    ]
+  })
+  .then(result => console.log(result))
+  .catch(err => console.error(err))
+```
+
 Example
 ------------
 
@@ -28,10 +116,6 @@ const schema = [
   {
     name: 'getTodo',
     path: '/todos/:todoId',  // path parameter
-    queryString: [{
-      name: 'test',
-      value: 'querystring_test'
-    }],
     method: 'get',
   },
 ];
@@ -44,11 +128,13 @@ const api = new ApiTester(schema, {
 async function start() {
   try {
     await api.newPost({
+      // Post Body
       body: {
         title: 'foo!!!!!!',
         body: 'bar!!',
         userId: 1
       },
+      // Tester
       tester: function(resp) {
         try {
           assert.equal(typeof(resp.id), 'number', 'Type of id is not equal to number');
@@ -73,6 +159,7 @@ async function start() {
         }
       }
     });
+    
   } catch (err) {
     console.error(err);
   }
