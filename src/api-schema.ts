@@ -9,7 +9,7 @@ export interface ICApiParam {
 }
 
 export interface ICApiUploadFile {
-  formName: string;
+  fieldName: string;
   filename: string;
   path: string;
   contentType?: string;
@@ -191,7 +191,7 @@ export class ApiSchema {
 
         data.uploads.forEach(file => {
           let _file = fs.readFileSync(file.path);
-          form.append(file.formName, _file, {
+          form.append(file.fieldName, _file, {
             filename: path.basename(file.path),
             contentType: mime.contentType(path.extname(file.path)) || undefined,
           });
