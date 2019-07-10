@@ -28,7 +28,7 @@ const api = new ApiTester([
   rootUrl: '<API root URL>'   // e.g. https://jsonplaceholder.typicode.com
                               // Default: http://localhost:3000
   showResult: true            // set false to disable results console log
-}).Apis;  // Don't for got this
+}).Apis;  // Don't forget this
 ```
 
 Use Your Api
