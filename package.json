@@ -1,0 +1,38 @@
+{
+  "name": "@single9/api-tester",
+  "version": "0.0.3",
+  "description": "Api Tester",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "prepare": "tsc",
+    "build": "tsc"
+  },
+  "keywords": [
+    "api",
+    "tester"
+  ],
+  "author": "Duye Chen",
+  "license": "MIT",
+  "dependencies": {
+    "mime-types": "^2.1.24",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "@types/mime-types": "^2.1.0",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.6.1",
+    "@types/request-promise": "^4.1.44"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/single9/api-tester.git"
+  },
+  "bugs": {
+    "url": "https://github.com/single9/api-tester/issues"
+  },
+  "homepage": "https://github.com/single9/api-tester#readme"
+}
