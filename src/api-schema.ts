@@ -31,6 +31,10 @@ export interface IApiSchemaOptions {
   showResult?: boolean;
 }
 
+export interface ICallableApiFunction {
+  (param: IActionParams): Promise<any>
+}
+
 export interface IActionTesterFunction {
   (result: any): void;
 }
@@ -40,6 +44,7 @@ export interface IActionParams {
   body?: {
     [key: string]: any
   }
+  upload?: ICApiUploadFile[];
   tester?: IActionTesterFunction;
 }
 
@@ -48,7 +53,7 @@ export class ApiSchema {
   private rootUrl: string = 'http://localhost:3000';
   private isShowResult: boolean = false;
   private apis: {
-    [key: string]: any
+    [key: string]: ICallableApiFunction
   } = {};
   constructor(schemas: ICApiSchema[], opts?: IApiSchemaOptions) {
     if (opts) {
