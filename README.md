@@ -20,8 +20,8 @@ Create APIs
 ```js
 const api = new ApiTester([
   {
-    name: 'ApiName',          // only allow certain words and digits
-    path: '/Data',            // e.g. /api/posts
+    name: '<Api Name>',       // only allow certain words and digits
+    path: '<Api Path>',       // e.g. /api/posts
     method: '<HTTP Method>',  // e.g. post
   },
 ], {
@@ -36,7 +36,7 @@ Use Your Api
 
 ### Usage
 
-    ApiTester.Apis.<ApiName>(params)
+    ApiTester.Apis.<name>(params)
 
 - **params**
   - queryString
@@ -44,6 +44,92 @@ Use Your Api
   - body
   - uploads
   - tester
+
+#### params.queryString
+
+Used for query string. e.g. /users?limit=100
+
+```js
+api.test({
+  queryString: {
+    key: value
+  }
+})
+```
+
+```js
+api.test({
+  queryString: [
+    {
+      name: string,
+      value: string | number,
+    }
+  ]
+})
+```
+
+#### params.pathParams
+
+Used for path parameters. e.g. /user/:id
+
+```js
+api.test({
+  pathParams: {
+    key: value
+  }
+})
+```
+
+```js
+api.test({
+  pathParams: [
+    {
+      name: string,
+      value: string | number,
+    }
+  ]
+})
+```
+
+#### params.body
+
+Used for request body.
+
+```js
+api.test({
+  body: {
+    key: value
+  }
+})
+```
+
+#### params.uploads
+
+Used for upload files.
+
+```js
+api.test({
+  uploads: [
+    {
+      fieldName: '<form feild name>',
+      path: '<file path>'
+      filename?: '<file name>',
+    }
+  ]
+})
+```
+
+#### params.tester
+
+Do some test after responded.
+
+```js
+api.test({
+  tester: function (res) {
+    assert(res === string);
+  }
+})
+```
 
 ### Example
 
