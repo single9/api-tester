@@ -3,7 +3,8 @@ import path from 'path';
 import request from 'request';
 import mime from 'mime-types';
 
-export interface ICApiParam {
+type HTTPMethod = 'get' | 'post' | 'delete' | 'put' | 'patch';
+type ApiParam = {
   name: string;
   value: any;
 }
@@ -20,7 +21,7 @@ export interface ICApiSchema {
   name: string;
   path: string;
   queryString?: IActionParams['queryString'];
-  method: string;
+  method: HTTPMethod;
   body?: IActionParams['body'];
   pathParams?: IActionParams['pathParams'];
   uploads?: ICApiUploadFile[];
@@ -39,8 +40,8 @@ export interface IActionTesterFunction {
   (result: any): void;
 }
 export interface IActionParams {
-  queryString?: ICApiParam[]
-  pathParams?: ICApiParam[]
+  queryString?: ApiParam[];
+  pathParams?: ApiParam[];
   body?: {
     [key: string]: any
   }
@@ -89,24 +90,30 @@ export class ApiSchema {
 
       if (_data.queryString) {
         let queryString = _data.queryString;
-        queryString.forEach(elem => {
-          qs += elem.name + '=' + elem.value;
-        });
+        if (Array.isArray(queryString)) {
+          queryString.forEach(elem => {
+            qs += elem.name + '=' + elem.value;
+          });
+        }
       }
 
       if (params) {
         if (params.queryString) {
           let queryString = params.queryString;
-          queryString.forEach(elem => {
-            qs += elem.name + '=' + elem.value;
-          });
+          if (Array.isArray(queryString)) {
+            queryString.forEach(elem => {
+              qs += elem.name + '=' + elem.value;
+            });
+          }
         }
 
         if (params.pathParams) {
           let pathParams = params.pathParams;
-          pathParams.forEach(elem => {
-            _path = _path.replace(':' + elem.name, elem.value);
-          });
+          if (Array.isArray(pathParams)) {
+            pathParams.forEach(elem => {
+              _path = _path.replace(':' + elem.name, elem.value);
+            });
+          }
         }
 
         if (params.body) {
@@ -128,9 +135,13 @@ export class ApiSchema {
 
       action.then((resp: any) => {
         if (params && typeof(params.tester) === 'function') {
-          console.log('------------- Tester -------------');
-          params.tester(resp.toJSON().body);
-          console.log('---------------------------------');
+          console.log('-= Tester =-');
+          try {
+            params.tester(resp.toJSON().body);
+          } catch (err) {
+            console.error(err.stack);
+          }
+          console.log('-----');
         }
       });
 
@@ -242,7 +253,7 @@ export class ApiSchema {
       response.request.method, response.request.uri.href,
       '\n----------- Responses ------------\n',
       'Status Code: ' + response.statusCode + '\n',
-      response.body,
+      'Body: \n' + JSON.stringify(response.body),
       '\n--------------',
       res.elapsedTime, 'ms -------------'
     );
