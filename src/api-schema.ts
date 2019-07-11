@@ -82,6 +82,8 @@ export class ApiSchema {
     schemas.forEach(schema => {
       if (schema.name.search(/\W+/) >= 0)
         throw new Error('name only allow certain words and digits');
+      if (this.apis[schema.name] !== undefined) 
+        throw new Error(`Duplicated API: ${schema.name}`);
       this.apis[schema.name] = this.actions(schema);
     });
   }
