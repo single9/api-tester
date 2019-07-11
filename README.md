@@ -222,12 +222,7 @@ async function start() {
       },
       // Tester
       tester: function(resp) {
-        try {
-          assert.equal(typeof(resp.id), 'number', 'Type of id is not equal to number');
-          console.log('Done');
-        } catch (err) {
-          console.error(err);
-        }
+        assert.equal(typeof(resp.id), 'number');
       }
     });
 
@@ -237,12 +232,7 @@ async function start() {
         value: 2
       }],
       tester: function(resp) {
-        try {
-          assert.equal(typeof(resp.title), 'string', 'Type of title is not equal to string');
-          console.log('Done');
-        } catch (err) {
-          console.error(err);
-        }
+        assert.equal(typeof(resp.title), 'string');
       }
     });
     
