@@ -37,7 +37,7 @@ export interface IApiSchemaOptions {
 }
 
 export interface ICallableApiFunction {
-  (param: IActionParams): Promise<any>
+  (param: IActionParams): Promise<request.ResponseAsJSON>
 }
 
 export interface IActionTesterFunction {
@@ -274,7 +274,11 @@ function parsePathParams(path: string, pathParams: IActionParams['pathParams']) 
 
   if (Array.isArray(pathParams)) {
     pathParams.forEach(elem => {
-      _path = _path.replace(':' + elem.name, elem.value.toString());
+      if (elem.value) {
+        _path = _path.replace(':' + elem.name, elem.value.toString());
+      } else {
+        throw new Error('pathParams is invalid');
+      }
     });
   } else {
     for (let key in pathParams) {
