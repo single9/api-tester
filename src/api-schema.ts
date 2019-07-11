@@ -131,6 +131,7 @@ export class ApiSchema {
           console.log('-= Tester =-');
           try {
             params.tester(resp.toJSON().body);
+            console.log('All test done.');
           } catch (err) {
             console.error(err.stack);
           }
