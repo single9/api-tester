@@ -4,10 +4,14 @@ import request from 'request';
 import mime from 'mime-types';
 
 type HTTPMethod = 'get' | 'post' | 'delete' | 'put' | 'patch';
-type ApiParam = {
+type ApiParamObj = {
+  [key: string]: string | number;
+} 
+
+type ApiParamArray = {
   name: string;
-  value: any;
-}
+  value: string | number;
+}[]
 
 export interface ICApiUploadFile {
   fieldName: string;
@@ -40,8 +44,8 @@ export interface IActionTesterFunction {
   (result: any): void;
 }
 export interface IActionParams {
-  queryString?: ApiParam[];
-  pathParams?: ApiParam[];
+  queryString?: ApiParamObj | ApiParamArray;
+  pathParams?: ApiParamObj | ApiParamArray;
   body?: {
     [key: string]: any
   }
@@ -89,31 +93,20 @@ export class ApiSchema {
       let _path = _data.path;
 
       if (_data.queryString) {
-        let queryString = _data.queryString;
-        if (Array.isArray(queryString)) {
-          queryString.forEach(elem => {
-            qs += elem.name + '=' + elem.value;
-          });
-        }
+        qs += parseQueryStringParams(_data.queryString);
+      }
+
+      if (_data.pathParams) {
+        _path = parsePathParams(_path, _data.pathParams);
       }
 
       if (params) {
         if (params.queryString) {
-          let queryString = params.queryString;
-          if (Array.isArray(queryString)) {
-            queryString.forEach(elem => {
-              qs += elem.name + '=' + elem.value;
-            });
-          }
+          qs += parseQueryStringParams(params.queryString);
         }
 
         if (params.pathParams) {
-          let pathParams = params.pathParams;
-          if (Array.isArray(pathParams)) {
-            pathParams.forEach(elem => {
-              _path = _path.replace(':' + elem.name, elem.value);
-            });
-          }
+          _path = parsePathParams(_path, params.pathParams);
         }
 
         if (params.body) {
@@ -258,4 +251,36 @@ export class ApiSchema {
       res.elapsedTime, 'ms -------------'
     );
   }
+}
+
+function parseQueryStringParams(queryString: IActionParams['queryString']) {
+  let qs = '';
+
+  if (Array.isArray(queryString)) {
+    queryString.forEach(elem => {
+      qs += elem.name + '=' + elem.value;
+    });
+  } else {
+    for (let key in queryString) {
+      qs += key + '=' + queryString[key];
+    }
+  }
+
+  return qs;
+}
+
+function parsePathParams(path: string, pathParams: IActionParams['pathParams']) {
+  let _path = path;
+
+  if (Array.isArray(pathParams)) {
+    pathParams.forEach(elem => {
+      _path = _path.replace(':' + elem.name, elem.value.toString());
+    });
+  } else {
+    for (let key in pathParams) {
+      _path = _path.replace(':' + key, pathParams[key].toString());
+    }
+  }
+
+  return _path;
 }
