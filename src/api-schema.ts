@@ -196,8 +196,18 @@ export class ApiSchema {
 
       if (data.uploads) {
         data.uploads.forEach(file => {
-          let _file = fs.createReadStream(file.path);
-          form[file.fieldName] = _file;
+          let _files = [];
+
+          if (Array.isArray(file.path)) {
+            let _file = fs.createReadStream(file.path);
+            _files.push(_file);
+          }
+
+          if (_files.length > 0) {
+            form[file.fieldName] = _files;
+          } else {
+            form[file.fieldName] = fs.createReadStream(file.path);
+          }
         });
 
         if (data.body) {
