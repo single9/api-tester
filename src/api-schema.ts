@@ -29,6 +29,7 @@ export interface ICApiSchema {
   body?: IActionParams['body'];
   pathParams?: IActionParams['pathParams'];
   uploads?: ICApiUploadFile[];
+  encoding?: string | null;
 }
 
 export interface IApiSchemaOptions {
@@ -139,7 +140,8 @@ export class ApiSchema {
           }
           console.log('-----');
         }
-      });
+      })
+      .catch(console.error);
 
       return action;
     };
@@ -180,11 +182,40 @@ export class ApiSchema {
 
   private post(data: ICApiSchema) {
     return new Promise((resolve, reject) => {
-      let req = request.post(data.path, {
+      let sendData: {
+        [key: string]: any
+       } = {
+        encoding: data.encoding,
         time: true,
         json: true,
-        body: data.body
-      }, (err, resp) => {
+      };
+
+      let form: {
+        [key: string]: any
+       } = {};
+
+      if (data.uploads) {
+        data.uploads.forEach(file => {
+          let _file = fs.createReadStream(file.path);
+          form[file.fieldName] = _file;
+        });
+
+        if (data.body) {
+          let body = data.body;
+          let keys = Object.keys(body);
+          keys.forEach(key => {
+            form[key] = body[key].toString();
+          });
+        }
+      }
+
+      if (Object.keys(form).length > 0) {
+        sendData.formData = form;
+      } else if (data.body) {
+        sendData.body = data.body;
+      }
+
+      request.post(data.path, sendData, (err, resp) => {
         if (err) {
           reject(err);
         } else {
@@ -192,18 +223,6 @@ export class ApiSchema {
           resolve(resp);
         }
       });
-
-      if (data.uploads) {
-        let form = req.form();
-
-        data.uploads.forEach(file => {
-          let _file = fs.readFileSync(file.path);
-          form.append(file.fieldName, _file, {
-            filename: path.basename(file.path),
-            contentType: mime.contentType(path.extname(file.path)) || undefined,
-          });
-        });
-      }
     });
   }
   
