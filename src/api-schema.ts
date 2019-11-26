@@ -96,7 +96,7 @@ export class ApiSchema {
       let _path = _data.path;
 
       if (_data.queryString) {
-        qs += parseQueryStringParams(_data.queryString);
+        qs = parseQueryStringParams(_data.queryString);
       }
 
       if (_data.pathParams) {
@@ -105,7 +105,7 @@ export class ApiSchema {
 
       if (params) {
         if (params.queryString) {
-          qs += parseQueryStringParams(params.queryString);
+          qs = parseQueryStringParams(params.queryString);
         }
 
         if (params.pathParams) {
@@ -286,19 +286,19 @@ export class ApiSchema {
 }
 
 function parseQueryStringParams(queryString: IActionParams['queryString']) {
-  let qs = '';
+  let qs = [];
 
   if (Array.isArray(queryString)) {
     queryString.forEach(elem => {
-      qs += elem.name + '=' + elem.value;
+      qs.push(elem.name + '=' + elem.value);
     });
   } else {
     for (let key in queryString) {
-      qs += key + '=' + queryString[key];
+      qs.push(key + '=' + queryString[key]);
     }
   }
 
-  return qs;
+  return qs.join('&');
 }
 
 function parsePathParams(path: string, pathParams: IActionParams['pathParams']) {
