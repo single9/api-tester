@@ -151,15 +151,15 @@ api.getPosts()
 
 Upload File
 -----------
-
-    ApiTester.Apis.<ApiName>({
-      uploads: [
-        fieldName: <Form Field Name>,
-        path: <File Path>,
-        filename: <File Name>,
-      ]
-    })
-
+```js
+ApiTester.Apis.<ApiName>({
+  uploads: [
+    fieldName: '<Form Field Name>',
+    path: '<File Path>',
+    filename: '<File Name>',
+  ]
+})
+```
 ```js
 const path = require('path');
 const api = new ApiTester([
