@@ -190,7 +190,7 @@ Example
 
 ```js
 const assert = require('assert').strict;
-const { ApiTester } = require('@single9/api-tester');
+const ApiTester = require('@single9/api-tester');
 
 // Create your API schema
 const schema = [
