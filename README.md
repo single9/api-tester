@@ -12,7 +12,7 @@ Usage
 ============
 
 ```js
-const { ApiTester } = require('@single9/api-tester');
+const ApiTester = require('@single9/api-tester');
 ```
 
 Create APIs
@@ -28,7 +28,7 @@ const api = new ApiTester([
   rootUrl: '<API root URL>'   // e.g. https://jsonplaceholder.typicode.com
                               // Default: http://localhost:3000
   showResult: true            // set false to disable results console log
-}).Apis;  // Don't forget this
+})
 ```
 
 Use Your Api
@@ -36,7 +36,7 @@ Use Your Api
 
 ### Usage
 
-    ApiTester.Apis.<name>(params)
+    ApiTester.<your_api_name>(params)
 
 - **params**
   - queryString
@@ -142,7 +142,7 @@ const api = new ApiTester([
   },
 ], {
   showResult: true            // set false to disable results console log
-}).Apis;
+});
 
 api.getPosts()
   .then(result => console.log(result))
@@ -170,7 +170,7 @@ const api = new ApiTester([
   },
 ], {
   showResult: true            // set false to disable results console log
-}).Apis;
+});
 
 const filePath = path.join(__dirname, 'image.jpg'),
 
@@ -209,7 +209,7 @@ const schema = [
 const api = new ApiTester(schema, {
   rootUrl: 'https://jsonplaceholder.typicode.com',
   showResult: true
-}).Apis;
+});
 
 async function start() {
   try {
