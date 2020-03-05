@@ -66,14 +66,11 @@ function actions(action: Action, rootUrl: string, data: ICApiSchema) {
 
     act.then((resp: any) => {
       if (params && typeof(params.tester) === 'function') {
-        console.log('-= Tester =-');
         try {
           params.tester(resp.toJSON().body);
-          console.log('All test done.');
         } catch (err) {
           console.error(err.stack);
         }
-        console.log('-----');
       }
     })
     .catch(console.error);
