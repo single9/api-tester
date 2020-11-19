@@ -26,11 +26,15 @@ export interface ICApiSchema {
   pathParams?: IActionParams['pathParams'];
   uploads?: ICApiUploadFile[];
   encoding?: string | null;
+  headers?: IActionParams['headers'];
+  auth?: IActionParams['auth'];
 }
 
 export interface IApiSchemaOptions {
   rootUrl?: string;
   showResult?: boolean;
+  headers?: IActionParams['headers'];
+  auth?: IActionParams['auth'];
 }
 
 export interface ICallableApiFunction {
@@ -48,4 +52,6 @@ export interface IActionParams {
   }
   uploads?: ICApiUploadFile[];
   tester?: IActionTesterFunction;
+  headers?: request.Headers;
+  auth?: request.AuthOptions
 }

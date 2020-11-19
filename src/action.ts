@@ -5,6 +5,13 @@ import {
   IApiSchemaOptions,
 } from './interfaces';
 
+function getOptions(data: ICApiSchema) {
+  return Object.assign({
+    time: true,
+    json: true,
+  }, data);
+}
+
 export default class {
   [key: string]: Promise<request.Response> | any;
   private isShowResult: boolean;
@@ -13,11 +20,9 @@ export default class {
   }
 
   get(data: ICApiSchema): Promise<request.Response> {
+    const options = getOptions(data);
     return new Promise((resolve, reject) => {
-      request.get(data.path, {
-        time: true,
-        json: true,
-      }, (err, resp) => {
+      request.get(data.path, options, (err, resp) => {
         if (err) {
           reject(err);
         } else {
@@ -29,12 +34,9 @@ export default class {
   }
 
   delete(data: ICApiSchema): Promise<request.Response> {
+    const options = getOptions(data);
     return new Promise((resolve, reject) => {
-      request.delete(data.path, {
-        time: true,
-        json: true,
-        body: data.body,
-      }, (err, resp) => {
+      request.delete(data.path, options, (err, resp) => {
         if (err) {
           reject(err);
         } else {
@@ -46,6 +48,7 @@ export default class {
   }
 
   post(data: ICApiSchema): Promise<request.Response> {
+    const options = getOptions(data);
     return new Promise((resolve, reject) => {
       let sendData: {
         [key: string]: any
@@ -102,12 +105,9 @@ export default class {
   }
   
   put(data: ICApiSchema): Promise<request.Response> {
+    const options = getOptions(data);
     return new Promise((resolve, reject) => {
-      request.put(data.path, {
-        time: true,
-        json: true,
-        body: data.body,
-      }, (err, resp) => {
+      request.put(data.path, options, (err, resp) => {
         if (err) {
           reject(err);
         } else {
@@ -119,12 +119,9 @@ export default class {
   }
 
   patch(data: ICApiSchema): Promise<request.Response> {
+    const options = getOptions(data);
     return new Promise((resolve, reject) => {
-      request.patch(data.path, {
-        time: true,
-        json: true,
-        body: data.body,
-      }, (err, resp) => {
+      request.patch(data.path, options, (err, resp) => {
         if (err) {
           reject(err);
         } else {

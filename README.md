@@ -27,7 +27,14 @@ const api = new ApiTester([
 ], {
   rootUrl: '<API root URL>'   // e.g. https://jsonplaceholder.typicode.com
                               // Default: http://localhost:3000
-  showResult: true            // set false to disable results console log
+  showResult: true,           // set false to disable results console log
+  headers: {
+    // The headers you want to send. e.g. 'authorization': 'Bearer SAdoweasd...',
+  },
+  auth: { // authorization
+    username: 'username',
+    password: 'password',
+  }
 })
 ```
 

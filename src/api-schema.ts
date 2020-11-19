@@ -10,6 +10,8 @@ export class ApiSchema {
   [key: string]: ICallableApiFunction;
   constructor(schemas: ICApiSchema[], opts?: IApiSchemaOptions) {
     const rootUrl = opts && opts.rootUrl;
+    const auth = opts && opts.auth;
+    const headers = opts && opts.headers;
 
     if (!rootUrl) throw new Error('rootUrl must be specified');
 
@@ -19,6 +21,8 @@ export class ApiSchema {
         throw new Error('name only allow certain words and digits');
       if (this[schema.name] !== undefined)
         throw new Error(`Duplicated API: ${schema.name}`);
+
+      schema = Object.assign(schema, { auth, headers });
       this[schema.name] = actions(action, rootUrl, schema);
     });
   }
@@ -61,6 +65,8 @@ function actions(action: Action, rootUrl: string, data: ICApiSchema) {
     }
 
     _data.path = rootUrl + _path + (qs && ('?' + qs));
+
+    if (!_data.method) throw new Error(`Missing API method: ${_data.name}`);
 
     let act = action[_data.method.toLowerCase()](_data, params);
 
