@@ -52,11 +52,7 @@ export default class {
     return new Promise((resolve, reject) => {
       let sendData: {
         [key: string]: any
-       } = {
-        encoding: data.encoding,
-        time: true,
-        json: true,
-      };
+       } = options;
 
       let form: {
         [key: string]: any
