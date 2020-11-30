@@ -60,10 +60,6 @@ function actions(action: Action, rootUrl: string, data: ICApiSchema) {
       }
     }
 
-    if (_path.search(/:.*/) > 0) {
-      throw new Error('some parameter not initailized: ' + _path );
-    }
-
     _data.path = rootUrl + _path + (qs && ('?' + qs));
 
     if (!_data.method) throw new Error(`Missing API method: ${_data.name}`);
