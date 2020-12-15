@@ -110,7 +110,9 @@ function parsePathParams(path: string, pathParams: IActionParams['pathParams']) 
     });
   } else {
     for (let key in pathParams) {
-      _path = _path.replace(':' + key, pathParams[key].toString());
+      if (pathParams[key]) {
+        _path = _path.replace(':' + key, pathParams[key].toString());
+      }
     }
   }
 
