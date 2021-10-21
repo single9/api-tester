@@ -71,7 +71,9 @@ function actions(action: Action, rootUrl: string, data: ICApiSchema) {
         try {
           params.tester(resp.toJSON().body);
         } catch (err) {
-          console.error(err.stack);
+          if (err instanceof Error) {
+            console.error(err.stack);
+          }
         }
       }
     })
